@@ -10,7 +10,7 @@ CREATE TABLE users (
     full_name VARCHAR(100) NOT NULL,
     username VARCHAR(50) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'cashier', 'manager') NOT NULL DEFAULT 'cashier',
+    role ENUM('admin', 'staff') NOT NULL DEFAULT 'staff',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -41,8 +41,8 @@ INSERT INTO categories (category_name, category_color) VALUES
 
 CREATE TABLE products (
     product_id INT AUTO_INCREMENT PRIMARY KEY,
-    barcode VARCHAR(50) NOT NULL UNIQUE,
-    sku VARCHAR(100) NOT NULL,
+    -- barcode VARCHAR(50) NOT NULL UNIQUE,
+    sku VARCHAR(100) NOT NULL UNIQUE,
     Supplier VARCHAR(50),
     product_name VARCHAR(100) NOT NULL,
     color VARCHAR(50) NOT NULL,
@@ -52,7 +52,7 @@ CREATE TABLE products (
     cost DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     srp DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     image_path VARCHAR(255) DEFAULT NULL,
-    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active',
+    status ENUM('active', 'inactive') NOT NULL DEFAULT 'active', -- INCLUDE IN UI 
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -77,7 +77,7 @@ CREATE TABLE inventory (
     inventory_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     quantity INT NOT NULL DEFAULT 0,
-    low_stock_threshold INT DEFAULT 5,
+    low_stock_threshold INT DEFAULT 5, -- INCLUDE IN SETTINGS-to change default "low stock alert"
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT fk_inventory_productID
@@ -117,13 +117,13 @@ CREATE TABLE sales (
     sale_id INT AUTO_INCREMENT PRIMARY KEY,
     receipt_no VARCHAR(50) NOT NULL UNIQUE,
     customer_id INT NOT NULL,
-    cashier_id INT NOT NULL,
+    -- San galing to? cashier_id INT NOT NULL,
     subtotal DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     discount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     amount_paid DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     change_amount DECIMAL(10,2) NOT NULL DEFAULT 0.00,
-    payment_method ENUM('cash', 'gcash', 'card') DEFAULT 'cash',
+    payment_method ENUM('cash', 'online') DEFAULT 'cash',
     sale_status ENUM('completed', 'voided', 'refunded') DEFAULT 'completed',
     sale_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
@@ -180,11 +180,11 @@ INSERT INTO sale_items (
 (2, 3, 1, 180.00, 350.00, 350.00, 170.00);
 
 -- =========================================
--- 8) STOCK_MOVEMENTS
+-- 😎 STOCK_MOVEMENTS
 -- =========================================
 
 CREATE TABLE stock_movements (
-    movement_id INT AUTO_INCREMENT PRIMARY KEY,
+    -- San galing tooo? movement_id INT AUTO_INCREMENT PRIMARY KEY,
     product_id INT NOT NULL,
     movement_type ENUM('in', 'out', 'adjustment', 'void', 'refund') NOT NULL,
     quantity_before INT NOT NULL,
@@ -272,5 +272,3 @@ INSERT INTO refund_transactions (
 ) VALUES
 (3, 'Damaged Item', 'Customer returned item with issue', 1),
 (2, 'Wrong Size', 'Requested exchange/refund after fitting', 1);
-
-
